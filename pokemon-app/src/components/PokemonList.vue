@@ -1,6 +1,7 @@
 <template>
     <div>
-        <v-list>
+        <pokeball-loader v-if="isLoading"></pokeball-loader>
+        <v-list v-else>
             <v-list-item v-for="pokemon in pokemons" :key="pokemon.id">
                 <v-list-item-content>
                     <v-list-item-title>{{ pokemon.name }}</v-list-item-title>
@@ -23,7 +24,7 @@ export default {
                 { id: 1, name: 'Pikachu' },
                 { id: 2, name: 'Charizard' },
                 { id: 3, name: 'Bulbasaur' },
-                // Add more pokemons here...
+                //
             ]
         };
     },

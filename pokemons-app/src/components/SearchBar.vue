@@ -3,12 +3,15 @@
     v-model="searchTerm"
     label="Search"
     outlined
+    dense
+    prepend-icon="mdi-magnify"
     @input="debouncedSearch"
   ></v-text-field>
 </template>
 
 <script>
 import { debounce } from 'lodash'
+import '@mdi/font/css/materialdesignicons.css'
 
 export default {
   data() {
@@ -16,10 +19,13 @@ export default {
       searchTerm: '',
     }
   },
+  created() {
+    this.debouncedSearch = debounce(this.search, 300)
+  },
   methods: {
-    debouncedSearch: debounce(function () {
-      // searching logic
-    }, 300),
+    search() {
+      this.$emit('search', this.searchTerm)
+    },
   },
 }
 </script>

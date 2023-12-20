@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import PokeballLoader from '@/components/PokeballLoader.vue';
+import { mapGetters } from 'vuex';
 export default {
     data() {
         return {
@@ -28,12 +30,15 @@ export default {
             ]
         };
     },
+    computed: {
+    ...mapGetters(['isLoading'])  // Map the Vuex getter
+    },
     methods: {
         toggleFavorite(pokemon) {
             this.$store.commit('toggleFavorite', pokemon);
         },
         isFavorite(pokemon) {
-            return this.$store.getters.isFavorite(pokemon);
+          return this.$store.getters.isFavorite(pokemon);
         }
     }
 };

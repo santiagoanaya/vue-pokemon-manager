@@ -7,7 +7,7 @@
         </v-list-item-content>
         <v-list-item-action>
           <v-icon @click="toggleFavorite(pokemon)">
-            {{ isFavorite(pokemon) ? 'mdi-star' : 'mdi-star-outline' }}
+            {{ isFavorite(pokemon.id) ? 'mdi-star' : 'mdi-star-outline' }}
           </v-icon>
         </v-list-item-action>
       </v-list-item>
@@ -25,33 +25,42 @@ export default {
       type: String,
       default: '',
     },
+    pokemons: {
+      type: Array,
+      required: true,
+    },
+    showOnlyFavorites: {
+      type: Boolean,
+      required: true,
+    },
   },
   data() {
-    return {
-      pokemons: [
-        { id: 1, name: 'Pikachu' },
-        { id: 2, name: 'Charizard' },
-        { id: 3, name: 'Bulbasaur' },
-        // pokemones
-      ],
-    }
+    return {}
   },
   computed: {
     ...mapGetters(['isLoading']),
     filteredPokemons() {
-      return this.searchTerm
-        ? this.pokemons.filter((pokemon) =>
-            pokemon.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-          )
-        : this.pokemons
+      let filtered = this.pokemons
+
+      if (this.searchTerm) {
+        filtered = filtered.filter((pokemon) =>
+          pokemon.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+        )
+      }
+
+      if (this.showOnlyFavorites) {
+        filtered = filtered.filter((pokemon) => this.isFavorite(pokemon.id))
+      }
+
+      return filtered
     },
   },
   methods: {
     toggleFavorite(pokemon) {
       this.$store.commit('toggleFavorite', pokemon)
     },
-    isFavorite(pokemon) {
-      return this.$store.getters.isFavorite(pokemon)
+    isFavorite(pokemonId) {
+      return this.$store.getters.isFavorite(pokemonId)
     },
   },
 }

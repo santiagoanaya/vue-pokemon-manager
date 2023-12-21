@@ -1,7 +1,11 @@
 <template>
   <div>
     <v-list>
-      <v-list-item v-for="pokemon in filteredPokemons" :key="pokemon.id">
+      <v-list-item
+        v-for="pokemon in filteredPokemons"
+        :key="pokemon.name"
+        @click="showDetails(pokemon)"
+      >
         <v-list-item-content>
           <v-list-item-title>{{ pokemon.name }}</v-list-item-title>
         </v-list-item-content>
@@ -61,6 +65,9 @@ export default {
     },
     isFavorite(pokemonId) {
       return this.$store.getters.isFavorite(pokemonId)
+    },
+    showDetails(pokemon) {
+      this.$emit('show-details', pokemon)
     },
   },
 }

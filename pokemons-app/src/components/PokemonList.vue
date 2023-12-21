@@ -10,7 +10,7 @@
           <v-list-item-title>{{ pokemon.name }}</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
-          <v-icon @click="toggleFavorite(pokemon)">
+          <v-icon @click.stop="toggleFavorite(pokemon)">
             {{ isFavorite(pokemon.id) ? 'mdi-star' : 'mdi-star-outline' }}
           </v-icon>
         </v-list-item-action>
@@ -29,10 +29,6 @@ export default {
       type: String,
       default: '',
     },
-    pokemons: {
-      type: Array,
-      required: true,
-    },
     showOnlyFavorites: {
       type: Boolean,
       required: true,
@@ -42,9 +38,9 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['isLoading']),
+    ...mapGetters(['isLoading', 'getPokemons', 'getFavorites']),
     filteredPokemons() {
-      let filtered = this.pokemons
+      let filtered = this.getPokemons
 
       if (this.searchTerm) {
         filtered = filtered.filter((pokemon) =>
@@ -53,7 +49,10 @@ export default {
       }
 
       if (this.showOnlyFavorites) {
-        filtered = filtered.filter((pokemon) => this.isFavorite(pokemon.id))
+        const favoriteIds = this.getFavorites.map((fav) => fav.id)
+        filtered = filtered.filter((pokemon) =>
+          favoriteIds.includes(pokemon.id)
+        )
       }
 
       return filtered
@@ -62,6 +61,9 @@ export default {
   methods: {
     toggleFavorite(pokemon) {
       this.$store.commit('toggleFavorite', pokemon)
+      // this.$toast.success(
+      //   `${this.isFavorite(pokemon) ? 'Added to' : 'Removed from'} favorites!`
+      // )
     },
     isFavorite(pokemonId) {
       return this.$store.getters.isFavorite(pokemonId)

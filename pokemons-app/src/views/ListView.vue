@@ -3,7 +3,6 @@
     <SearchBar @search="updateSearchTerm" />
     <PokemonList
       :searchTerm="searchTerm"
-      :pokemons="filteredPokemons"
       :showOnlyFavorites="showOnlyFavorites"
       @show-details="handleShowDetails"
     />

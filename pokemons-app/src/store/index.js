@@ -18,8 +18,12 @@ export default new Vuex.Store({
     isFavorite: (state) => (pokemonId) => {
       return state.favorites.some((pokemon) => pokemon.id === pokemonId)
     },
-    getPokemons: (state) => state.pokemons,
-    getFavorites: (state) => state.favorites,
+    getPokemons: (state) => {
+      return state.pokemons
+    },
+    getFavorites: (state) => {
+      return state.favorites
+    },
   },
   mutations: {
     setLoading(state, payload) {
@@ -29,7 +33,7 @@ export default new Vuex.Store({
       state.favorites.push(payload)
     },
     toggleFavorite(state, pokemon) {
-      const index = state.favorites.findIndex((p) => p.id === pokemon.id)
+      const index = state.favorites.findIndex((fav) => fav.id === pokemon.id)
       if (index >= 0) {
         state.favorites.splice(index, 1)
       } else {
@@ -42,8 +46,8 @@ export default new Vuex.Store({
     setSelectedPokemon(state, pokemon) {
       state.selectedPokemon = pokemon
     },
-    setPokemonDetail(state, { id, detail }) {
-      Vue.set(state.pokemonDetails, id, detail)
+    setPokemonDetail(state, { name, detail }) {
+      Vue.set(state.pokemonDetails, name, detail)
     },
   },
   actions: {
@@ -52,30 +56,34 @@ export default new Vuex.Store({
         return
       }
       try {
-        let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=50')
+        let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=5')
         let data = await response.json()
-        commit('setPokemons', data.results)
+        let pokemonsWithId = data.results.map((pokemon) => ({
+          ...pokemon,
+          id: Number(pokemon.url.split('/').filter(Boolean).pop()), // id from url
+        }))
+        commit('setPokemons', pokemonsWithId)
       } catch (error) {
-        console.error('Error fetching Pokémon data:', error)
+        this.$toast.error('Error fetching Pokémon data:', error)
       }
     },
     async fetchPokemonDetails({ commit, state }, pokemon) {
-      if (state.pokemonDetails[pokemon.name]) {
-        // check if the pokemon was already fetched
-        commit('setSelectedPokemon', state.pokemonDetails[pokemon.name])
+      const pokemonName = pokemon.name
+      if (state.pokemonDetails[pokemonName]) {
+        commit('setSelectedPokemon', state.pokemonDetails[pokemonName])
         return
       }
 
       commit('setLoading', true)
       try {
         const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
+          `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
         )
         const data = await response.json()
-        commit('setPokemonDetail', { name: pokemon.name, detail: data })
+        commit('setPokemonDetail', { name: pokemonName, detail: data })
         commit('setSelectedPokemon', data)
       } catch (error) {
-        console.error('Error fetching Pokémon details:', error)
+        this.$toast.error('Error fetching Pokémon details:', error)
       } finally {
         commit('setLoading', false)
       }

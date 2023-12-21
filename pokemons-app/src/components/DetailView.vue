@@ -31,23 +31,23 @@
     <v-card-actions>
       <v-btn text @click="shareToFriends">Share to my friends</v-btn>
       <v-btn icon @click="toggleFavorite">
-        <v-icon>{{
-          isFavorite(selectedPokemon.id) ? 'mdi-star' : 'mdi-star-outline'
-        }}</v-icon>
+        <v-icon>{{ isFavorite ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   computed: {
     ...mapState(['selectedPokemon']),
-    ...mapGetters({
-      isFavorite: 'isFavorite',
-    }),
+    isFavorite() {
+      return this.selectedPokemon
+        ? this.$store.getters.isFavorite(this.selectedPokemon.id)
+        : false
+    },
   },
   methods: {
     closeCard() {
@@ -67,8 +67,8 @@ export default {
         this.$toast.error('Error copying to clipboard')
       }
     },
-    toggleFavorite(pokemon) {
-      this.$store.commit('toggleFavorite', pokemon)
+    toggleFavorite() {
+      this.$store.commit('toggleFavorite', this.selectedPokemon)
     },
     capitalizeFirstLetter(str) {
       return str.charAt(0).toUpperCase() + str.slice(1)

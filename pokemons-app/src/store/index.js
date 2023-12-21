@@ -55,6 +55,8 @@ export default new Vuex.Store({
       if (state.pokemons.length > 0) {
         return
       }
+      commit('setLoading', true)
+      console.log(state.loading)
       try {
         let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=5')
         let data = await response.json()
@@ -65,6 +67,8 @@ export default new Vuex.Store({
         commit('setPokemons', pokemonsWithId)
       } catch (error) {
         this.$toast.error('Error fetching Pokémon data:', error)
+      } finally {
+        commit('setLoading', false)
       }
     },
     async fetchPokemonDetails({ commit, state }, pokemon) {
@@ -75,6 +79,7 @@ export default new Vuex.Store({
       }
 
       commit('setLoading', true)
+      console.log(state.loading)
       try {
         const response = await fetch(
           `https://pokeapi.co/api/v2/pokemon/${pokemonName}`

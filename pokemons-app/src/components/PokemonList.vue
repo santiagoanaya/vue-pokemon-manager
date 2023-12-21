@@ -48,6 +48,12 @@ export default {
         )
       }
 
+      if (filtered.length === 0 && this.searchTerm) {
+        this.$emit('no-matches-found')
+      } else {
+        this.$emit('matches-found')
+      }
+
       if (this.showOnlyFavorites) {
         const favoriteIds = this.getFavorites.map((fav) => fav.id)
         filtered = filtered.filter((pokemon) =>

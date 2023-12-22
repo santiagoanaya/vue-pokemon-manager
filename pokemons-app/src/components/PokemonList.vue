@@ -18,14 +18,6 @@
           :isFavorite="isFavorite(pokemon.id)"
           @toggle-favorite="toggleFavorite"
         />
-        <!-- <v-icon
-          @click.stop="toggleFavorite(pokemon)"
-          :color="isFavorite(pokemon.id) ? 'orange' : 'grey'"
-          size="44"
-          class="grey lighten-2 rounded-circle"
-        >
-          mdi-star
-        </v-icon> -->
       </v-list-item-action>
     </v-list-item>
   </v-list>

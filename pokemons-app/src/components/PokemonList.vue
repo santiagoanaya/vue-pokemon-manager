@@ -13,14 +13,19 @@
         }}</v-list-item-title>
       </v-list-item-content>
       <v-list-item-action>
-        <v-icon
+        <FavoriteButton
+          :pokemon="pokemon"
+          :isFavorite="isFavorite(pokemon.id)"
+          @toggle-favorite="toggleFavorite"
+        />
+        <!-- <v-icon
           @click.stop="toggleFavorite(pokemon)"
           :color="isFavorite(pokemon.id) ? 'orange' : 'grey'"
           size="44"
           class="grey lighten-2 rounded-circle"
         >
           mdi-star
-        </v-icon>
+        </v-icon> -->
       </v-list-item-action>
     </v-list-item>
   </v-list>
@@ -29,8 +34,10 @@
 <script>
 import { mapGetters } from 'vuex'
 import '@mdi/font/css/materialdesignicons.css'
+import FavoriteButton from '@/components/FavoriteButton.vue'
 
 export default {
+  components: { FavoriteButton },
   props: {
     searchTerm: {
       type: String,

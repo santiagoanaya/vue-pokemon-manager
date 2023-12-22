@@ -1,8 +1,15 @@
 <template>
   <div class="no-matches">
-    <h2>Uh-oh!</h2>
-    <p>You look lost on your journey!</p>
-    <v-btn @click="goBackHome">Go back home</v-btn>
+    <h1 class="font-lato">Uh-oh!</h1>
+    <p class="text-h6 font-lato">You look lost on your journey!</p>
+    <v-chip
+      text
+      class="bottom-nav-button"
+      color="red lighten-1"
+      text-color="white"
+      @click="goBackHome"
+      >Go back home</v-chip
+    >
   </div>
 </template>
 
@@ -19,5 +26,12 @@ export default {
 <style>
 .no-matches {
   text-align: center;
+}
+.bottom-nav-button {
+  margin-right: 8px;
+  font-size: 18px !important;
+  font-family: 'Lato', sans-serif;
+  color: white;
+  padding: 10px 20px !important;
 }
 </style>

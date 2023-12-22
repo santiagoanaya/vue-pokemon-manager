@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import ListView from '../views/ListView.vue'
-import DetailView from '../components/DetailView.vue'
+const HomeView = () => import('../views/HomeView.vue')
+const ListView = () => import('../views/ListView.vue')
+const DetailView = () => import('../components/DetailModal.vue')
 Vue.use(Router)
 
 export default new Router({

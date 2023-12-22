@@ -4,9 +4,12 @@
     label="Search"
     outlined
     dense
-    prepend-icon="mdi-magnify"
     @input="debouncedSearch"
-  ></v-text-field>
+    class="search-bar"
+    background-color="white"
+  >
+    <v-icon slot="prepend-inner" class="search-icon"> mdi-magnify </v-icon>
+  </v-text-field>
 </template>
 
 <script>
@@ -29,3 +32,10 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.search-bar input {
+  font-family: 'Montserrat', sans-serif;
+  color: gray;
+}
+</style>

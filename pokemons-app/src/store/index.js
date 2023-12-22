@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import * as pokemonService from '@/services/pokemonService'
 
 Vue.use(Vuex)
 
@@ -51,24 +52,24 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    initializeStore({ dispatch }) {
+      dispatch('fetchPokemons')
+    },
     async fetchPokemons({ commit, state }) {
       if (state.pokemons.length > 0) {
+        // this can be deleted if i make a next button to call more pokemons
         return
       }
       commit('setLoading', true)
-      console.log(state.loading)
       try {
-        let response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=5')
-        let data = await response.json()
-        let pokemonsWithId = data.results.map((pokemon) => ({
-          ...pokemon,
-          id: Number(pokemon.url.split('/').filter(Boolean).pop()), // id from url
-        }))
+        const pokemonsWithId = await pokemonService.fetchPokemons()
         commit('setPokemons', pokemonsWithId)
       } catch (error) {
-        this.$toast.error('Error fetching Pokémon data:', error)
+        this.$toast.error('Error fetching Pokémon data', error)
       } finally {
-        commit('setLoading', false)
+        setTimeout(() => {
+          commit('setLoading', false)
+        }, 10000)
       }
     },
     async fetchPokemonDetails({ commit, state }, pokemon) {
@@ -79,12 +80,8 @@ export default new Vuex.Store({
       }
 
       commit('setLoading', true)
-      console.log(state.loading)
       try {
-        const response = await fetch(
-          `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
-        )
-        const data = await response.json()
+        const data = await pokemonService.fetchPokemonDetails(pokemonName)
         commit('setPokemonDetail', { name: pokemonName, detail: data })
         commit('setSelectedPokemon', data)
       } catch (error) {

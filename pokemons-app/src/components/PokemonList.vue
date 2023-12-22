@@ -45,7 +45,7 @@ export default {
     return {}
   },
   computed: {
-    ...mapGetters(['isLoading', 'getPokemons', 'getFavorites']),
+    ...mapGetters(['getPokemons', 'getFavorites']),
     searchTermLowercased() {
       return this.searchTerm.toLowerCase()
     },

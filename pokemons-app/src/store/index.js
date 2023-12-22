@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     loading: false,
+    loadingDetails: false,
     pokemons: [],
     favorites: [],
     selectedPokemon: null,
@@ -15,6 +16,9 @@ export default new Vuex.Store({
   getters: {
     isLoading(state) {
       return state.loading
+    },
+    isLoadingDetails(state) {
+      return state.loadingDetails
     },
     isFavorite: (state) => (pokemonId) => {
       return state.favorites.some((pokemon) => pokemon.id === pokemonId)
@@ -29,6 +33,9 @@ export default new Vuex.Store({
   mutations: {
     setLoading(state, payload) {
       state.loading = payload
+    },
+    setLoadingDetails(state, payload) {
+      state.loadingDetails = payload
     },
     setFavorite(state, payload) {
       state.favorites.push(payload)
@@ -69,7 +76,8 @@ export default new Vuex.Store({
       } finally {
         setTimeout(() => {
           commit('setLoading', false)
-        }, 10000)
+        }, 3000)
+        // this is just to show the loading animation
       }
     },
     async fetchPokemonDetails({ commit, state }, pokemon) {
@@ -79,7 +87,7 @@ export default new Vuex.Store({
         return
       }
 
-      commit('setLoading', true)
+      commit('setLoadingDetails', true)
       try {
         const data = await pokemonService.fetchPokemonDetails(pokemonName)
         commit('setPokemonDetail', { name: pokemonName, detail: data })
@@ -87,7 +95,7 @@ export default new Vuex.Store({
       } catch (error) {
         this.$toast.error('Error fetching Pokémon details:', error)
       } finally {
-        commit('setLoading', false)
+        commit('setLoadingDetails', false)
       }
     },
   },

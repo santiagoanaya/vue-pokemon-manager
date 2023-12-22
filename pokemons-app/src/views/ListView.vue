@@ -3,10 +3,10 @@
     <v-container class="list-container">
       <v-row>
         <v-col>
-          <SearchBar @search="updateSearchTerm" class="mx-3" />
+          <SearchBar @search="updateSearchTerm" v-show="!isLoading" />
           <PokeballLoader v-if="isLoading" />
           <PokemonList
-            v-show="!showNoMatchesMessage"
+            v-show="showContent"
             :searchTerm="searchTerm"
             :showOnlyFavorites="showOnlyFavorites"
             @show-details="handleShowDetails"
@@ -21,13 +21,10 @@
       </v-row>
     </v-container>
     <div class="bottom-navigation-container">
-      <v-bottom-navigation
-        v-if="!showNoMatchesMessage && !isLoading"
-        class="bottom-navigation"
-      >
+      <v-bottom-navigation v-show="showContent" class="bottom-navigation">
         <v-chip
           class="bottom-nav-button"
-          color="red lighten-1"
+          :color="allPokemonsButtonColor"
           text-color="white"
           @click="showAllPokemons"
         >
@@ -38,7 +35,7 @@
         </v-chip>
         <v-chip
           class="bottom-nav-button"
-          color="grey lighten-1"
+          :color="favoritesButtonColor"
           text-color="white"
           @click="showFavorites"
         >
@@ -80,9 +77,18 @@ export default {
     PokeballLoader,
   },
   computed: {
-    ...mapGetters(['getPokemons', 'getFavorites']),
+    ...mapGetters(['isLoading', 'getPokemons', 'getFavorites']),
     filteredPokemons() {
       return this.showOnlyFavorites ? this.getFavorites : this.getPokemons
+    },
+    showContent() {
+      return !this.showNoMatchesMessage && !this.isLoading
+    },
+    allPokemonsButtonColor() {
+      return this.showOnlyFavorites ? 'grey lighten-1' : 'red lighten-1'
+    },
+    favoritesButtonColor() {
+      return this.showOnlyFavorites ? 'red lighten-1' : 'grey lighten-1'
     },
   },
   methods: {

@@ -1,9 +1,12 @@
 <template>
   <v-card v-if="selectedPokemon">
+    <PokeballLoader v-if="isLoadingDetails"></PokeballLoader>
+    <!-- there is an issue with this loader displaying inside the card -->
     <v-img
       :src="selectedPokemon.sprites.front_default"
       height="300"
       class="mb-4"
+      v-else
     ></v-img>
     <v-btn icon class="close-button" @click="closeCard">
       <v-icon size="26">mdi-close-circle</v-icon>
@@ -42,12 +45,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 import { capitalizeFirstLetter } from '@/utils'
+import PokeballLoader from '@/components/PokeballLoader.vue'
 
 export default {
+  components: { PokeballLoader },
   computed: {
     ...mapState(['selectedPokemon']),
+    ...mapGetters(['isLoadingDetails']),
     isFavorite() {
       return this.selectedPokemon
         ? this.$store.getters.isFavorite(this.selectedPokemon.id)
